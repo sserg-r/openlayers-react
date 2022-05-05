@@ -7,51 +7,81 @@ import Point from "ol/geom/Point";
 import { osm, vector } from "./Source";
 import { fromLonLat, get } from "ol/proj";
 import GeoJSON from "ol/format/GeoJSON";
-import { Controls, FullScreenControl } from "./Controls";
 import FeatureStyles from "./Features/Styles";
+import { MapList } from "./SidePan";
+import LayerControl from "./Controls/LayerControl";
+import AppContext from "./AppContext";
+
 
 import mapConfig from "./config.json";
 import "./App.css";
 
-const geojsonObject = mapConfig.geojsonObject;
-const geojsonObject2 = mapConfig.geojsonObject2;
-const markersLonLat = [mapConfig.kansasCityLonLat, mapConfig.blueSpringsLonLat];
 
-function addMarkers(lonLatArray) {
-  var iconStyle = new Style({
-    image: new Icon({
-      anchorXUnits: "fraction",
-      anchorYUnits: "pixels",
-      src: mapConfig.markerImage32,
-    }),
-  });
-  let features = lonLatArray.map((item) => {
-    let feature = new Feature({
-      geometry: new Point(fromLonLat(item)),
-    });
-    feature.setStyle(iconStyle);
-    return feature;
-  });
-  return features;
-}
+
+
+const s1=vector({features: new GeoJSON().readFeatures(mapConfig.geojsonObject, {
+  featureProjection: get("EPSG:3857"),}),})
+
+const s2=vector({features: new GeoJSON().readFeatures(mapConfig.geojsonObject2, {
+  featureProjection: get("EPSG:3857"),}),})
+
+const layersDef=[
+  {id: 1, name: 'layer1', src: s1, type: 'vector',style: FeatureStyles.MultiPolygon, isvisible: true},
+  {id: 2, name: 'layer2', src: s2, type: 'vector',style: FeatureStyles.MultiPolygon, isvisible: false},  
+]
+ 
+
 
 const App = () => {
   const [center, setCenter] = useState(mapConfig.center);
   const [zoom, setZoom] = useState(9);
 
-  const [showLayer1, setShowLayer1] = useState(true);
-  const [showLayer2, setShowLayer2] = useState(true);
-  const [showMarker, setShowMarker] = useState(false);
+  const [LList, setLList] = useState(layersDef); 
+  
 
+  return (
+    <div>       
+      <AppContext.Provider value={{ LList, setLList}}>
+
+      <Map center={fromLonLat(center)} zoom={zoom}> 
+        {/* <Layers llist={LList}/>  */}
+        <Layers/> 
+        <LayerControl llist={LList}/>    
+          
+        {/* {MapList(lst, 'leftTopMenu')} */}
+      </Map> 
+      </AppContext.Provider>
+    </div>
+  );
+};
+
+
+
+
+
+/*
+const App = () => {
+  const [center, setCenter] = useState(mapConfig.center);
+  const [zoom, setZoom] = useState(9);
+
+  const [showLayer1, setShowLayer1] = useState(true);
+  const [showLayer2, setShowLayer2] = useState(false);
+  const [showKvartals, setShowKvartals] = useState(false);
   const [features, setFeatures] = useState(addMarkers(markersLonLat));
+
+
+
 
   return (
     <div>
-      <Map center={fromLonLat(center)} zoom={zoom}>
+      
+      <Map center={fromLonLat(center)} zoom={zoom}>        
+      
         <Layers>
+        
           <TileLayer source={osm()} zIndex={0} />
           {showLayer1 && (
-            <VectorLayer
+            <VectorLayer              
               source={vector({
                 features: new GeoJSON().readFeatures(geojsonObject, {
                   featureProjection: get("EPSG:3857"),
@@ -60,8 +90,9 @@ const App = () => {
               style={FeatureStyles.MultiPolygon}
             />
           )}
+
           {showLayer2 && (
-            <VectorLayer
+            <VectorLayer              
               source={vector({
                 features: new GeoJSON().readFeatures(geojsonObject2, {
                   featureProjection: get("EPSG:3857"),
@@ -70,17 +101,21 @@ const App = () => {
               style={FeatureStyles.MultiPolygon}
             />
           )}
-          {showMarker && <VectorLayer source={vector({ features })} />}
+          //{map.getLayersByName('ltwo')[0].setVisibility(false)}
+          {showKvartals && <VectorLayer source={vector({ features })} />}
         </Layers>
         <Controls>
           <FullScreenControl />
         </Controls>
-      </Map>
+        {MapList(lst, 'leftTopMenu')}
+      </Map> 
       <div>
         <input
           type="checkbox"
           checked={showLayer1}
           onChange={(event) => setShowLayer1(event.target.checked)}
+          // onChange={(event) => console.log(event.target.checked)}
+          // onChange={(event) => setShowLayer1(showLayer1 ? !showLayer1 : true)}
         />{" "}
         Johnson County
       </div>
@@ -96,13 +131,14 @@ const App = () => {
       <div>
         <input
           type="checkbox"
-          checked={showMarker}
-          onChange={(event) => setShowMarker(event.target.checked)}
+          checked={showKvartals}
+          onChange={(event) => setShowKvartals(event.target.checked)}
         />{" "}
         Show markers
       </div>
     </div>
   );
 };
+*/
 
 export default App;

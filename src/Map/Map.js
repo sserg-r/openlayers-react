@@ -20,6 +20,7 @@ const Map = ({ children, zoom, center }) => {
 		mapObject.setTarget(mapRef.current);
 		setMap(mapObject);
 
+		// return () =>  mapObject;
 		return () => mapObject.setTarget(undefined);
 	}, []);
 

@@ -8,9 +8,9 @@ const VectorLayer = ({ source, style, zIndex = 0 }) => {
 	useEffect(() => {
 		if (!map) return;
 
-		let vectorLayer = new OLVectorLayer({
+		let vectorLayer = new OLVectorLayer({			
 			source,
-			style
+			style			
 		});
 
 		map.addLayer(vectorLayer);
