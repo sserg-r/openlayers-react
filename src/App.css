@@ -2,19 +2,6 @@
   text-align: center;
 }
 
-.App-logo {
-  /* height: 40vmin; */
-  height: 20vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    float:top;
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
 .App-header {
   background-color: #41443b;
   min-height: 100vh;
@@ -29,16 +16,8 @@
   padding-left: 0%;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
 
-.App-header .leftTopMenu {
+.leftTopMenu {
   float:left;
   display: flex;  
   min-width: 30vh;
@@ -46,18 +25,16 @@
   border: 5px solid rgb(62, 61, 66);
   background-color:#434b4d;
   margin: 0pt;
-  /* padding:0em; */
+  color:white;  
 }
-/* ------------------------------------------ */
 
-.MapContainer {
-  background-color: #282c34;
+.ol-map {
   min-height: 80%;
   min-width: 100vw;
+  /* min-width: 600px;
+  min-height: 500px; */
+  margin: 5px;
+  height: 100vh;
+  /* width: "100%"; */
   display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(5px + 2vmin);
-  color: white;
 }

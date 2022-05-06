@@ -11,6 +11,10 @@ import FeatureStyles from "./Features/Styles";
 import { MapList } from "./SidePan";
 import LayerControl from "./Controls/LayerControl";
 import AppContext from "./AppContext";
+import hotSpots3857 from "./hotSpots3857.json"
+import grez_burnt from "./grez_burnt.json"
+
+import {Vector as VectorSource} from 'ol/source'; 
 
 
 import mapConfig from "./config.json";
@@ -19,22 +23,31 @@ import "./App.css";
 
 
 
-const s1=vector({features: new GeoJSON().readFeatures(mapConfig.geojsonObject, {
+// const s1=vector({features: new GeoJSON().readFeatures(mapConfig.geojsonObject, {
+//   featureProjection: get("EPSG:3857"),}),})
+
+
+
+const s1=vector({features: new GeoJSON().readFeatures(hotSpots3857, {
+    featureProjection: get("EPSG:3857"),}),})
+
+const s2=vector({features: new GeoJSON().readFeatures(grez_burnt, {
   featureProjection: get("EPSG:3857"),}),})
 
-const s2=vector({features: new GeoJSON().readFeatures(mapConfig.geojsonObject2, {
-  featureProjection: get("EPSG:3857"),}),})
+
+
+
 
 const layersDef=[
-  {id: 1, name: 'layer1', src: s1, type: 'vector',style: FeatureStyles.MultiPolygon, isvisible: true},
-  {id: 2, name: 'layer2', src: s2, type: 'vector',style: FeatureStyles.MultiPolygon, isvisible: false},  
+  {id: 1, name: ' hotSpots ', src: s1, type: 'vector',style: FeatureStyles.Point, isvisible: true},
+  {id: 2, name: ' burntAreas', src: s2, type: 'vector',style: FeatureStyles.MultiPolygon, isvisible: false},  
 ]
  
 
 
 const App = () => {
   const [center, setCenter] = useState(mapConfig.center);
-  const [zoom, setZoom] = useState(9);
+  const [zoom, setZoom] = useState(10);
 
   const [LList, setLList] = useState(layersDef); 
   
